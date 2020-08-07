@@ -4,10 +4,11 @@ import 'package:time_tracker_flutter/common_widgets/custom_raised_button.dart';
 
 class SocialSignInButton extends CustomRaiseButton {
   SocialSignInButton(
-      {IconData icon,
-      String text,
+      {@required IconData icon,
+      @required String text,
       Color color,
       Color textColor,
+      Color iconColor,
       VoidCallback onPressed})
       : super(
             child: Row(
@@ -15,6 +16,7 @@ class SocialSignInButton extends CustomRaiseButton {
               children: [
                 FaIcon(
                   icon,
+                  color: iconColor,
                 ),
                 Text(
                   text,

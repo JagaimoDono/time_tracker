@@ -4,7 +4,10 @@ import 'package:time_tracker_flutter/common_widgets/custom_raised_button.dart';
 
 class SignInButton extends CustomRaiseButton {
   SignInButton(
-      {String text, Color color, Color textColor, VoidCallback onPressed})
+      {@required String text,
+      Color color,
+      Color textColor,
+      VoidCallback onPressed})
       : super(
             child: Text(
               text,
