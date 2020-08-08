@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker_flutter/app/landing_page.dart';
 
-import 'app/sign_in/sign_in_page.dart';
-
-void main(){
+void main() {
   runApp(MyApp());
 }
 
@@ -15,8 +14,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.indigo,
         primarySwatch: Colors.indigo,
       ),
-      home: SignInPage(),
+      home: LandingPage(),
     );
   }
 }
-

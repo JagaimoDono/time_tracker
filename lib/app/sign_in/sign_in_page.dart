@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:time_tracker_flutter/app/sign_in/sign_in_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:time_tracker_flutter/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker_flutter/app/sign_in/social_sign_in_button.dart';
-import 'package:time_tracker_flutter/common_widgets/custom_raised_button.dart';
 
 class SignInPage extends StatelessWidget {
+  final Function(FirebaseUser) onSignIn;
+  SignInPage({this.onSignIn});
+
+  void _signInWithGoogle() {}
+
+  void _signInWithFacebook() {}
+
+  void _signInWithMail() {}
+
+  Future<void> _signInAnonymously() async {
+    try {
+      final authResult = await FirebaseAuth.instance.signInAnonymously();
+      onSignIn(authResult.user);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,18 +94,10 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in anonymously',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: () {},
+            onPressed: _signInAnonymously,
           ),
         ],
       ),
     );
   }
-
-  void _signInWithGoogle() {}
-
-  void _signInWithFacebook() {}
-
-  void _signInWithMail() {}
-
-  void _signInAnonymously() {}
 }
