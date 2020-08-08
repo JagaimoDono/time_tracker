@@ -85,7 +85,9 @@ class SignInPage extends StatelessWidget {
 
   void _signInWithGoogle() {}
 
-  void _signInWithFacebok() {}
+  void _signInWithFacebook() {}
 
   void _signInWithMail() {}
+
+  void _signInAnonymously() {}
 }
