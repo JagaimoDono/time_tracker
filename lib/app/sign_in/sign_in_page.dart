@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:time_tracker_flutter/app/sign_in/email_sign_in_page.dart';
 import 'package:time_tracker_flutter/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker_flutter/app/sign_in/social_sign_in_button.dart';
 import 'package:time_tracker_flutter/services/auth.dart';
@@ -26,12 +27,22 @@ class SignInPage extends StatelessWidget {
     }
   }
 
-  Future<void> _signInFacebook() async {
+  Future<void> _signInWithFacebook() async {
     try {
       await auth.signInWithFaceBook();
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> _signInWithEmail(BuildContext context) async {
+    //TODO Show email signin page
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (context) => EmailSignInPpage(),
+      ),
+    );
   }
 
   @override
@@ -41,12 +52,12 @@ class SignInPage extends StatelessWidget {
         title: Text('Time Tracker'),
         elevation: 2.0,
       ),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
@@ -78,7 +89,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             iconColor: Colors.white,
             color: Color(0xFF334D92),
-            onPressed: _signInFacebook,
+            onPressed: _signInWithFacebook,
           ),
           SizedBox(
             height: 10,
@@ -87,7 +98,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with email',
             textColor: Colors.white,
             color: Colors.teal[700],
-            onPressed: () {},
+            onPressed: () => _signInWithEmail(context),
           ),
           SizedBox(
             height: 10,
