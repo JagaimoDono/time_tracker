@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class User {
@@ -46,7 +47,26 @@ class Auth implements AuthBase {
   }
 
   @override
-  Future<User> signInWithFaceBook() async {}
+  Future<User> signInWithFaceBook() async {
+    final facebookLogin = FacebookLogin();
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+    final result = await facebookLogin.logInWithReadPermissions(
+      ['public_profile'],
+    );
+    print('Result = ${result}');
+    if (result.accessToken != null) {
+      final authResult = await _firebaseAuth.signInWithCredential(
+        FacebookAuthProvider.getCredential(
+            accessToken: result.accessToken.token),
+      );
+      return _userFromFirebase(authResult.user);
+    } else {
+      throw PlatformException(
+        code: 'ERROR_MISSING_TOKEN',
+        message: 'Missing token for Facebook Authentication',
+      );
+    }
+  }
 
   @override
   Future<User> signInWithGoogle() async {
@@ -83,7 +103,9 @@ class Auth implements AuthBase {
   @override
   Future<void> signOut() async {
     final googleSignIn = GoogleSignIn();
+    final facebookLogin = FacebookLogin();
     await googleSignIn.signOut();
+    facebookLogin.logOut();
     await _firebaseAuth.signOut();
   }
 }

@@ -19,7 +19,16 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInWithGoogle() async {
     try {
-      await auth.signInWithGoogle();
+      //await auth.signInWithGoogle();
+      auth.signInWithGoogle();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _signInFacebook() async {
+    try {
+      await auth.signInWithFaceBook();
     } catch (e) {
       print(e.toString());
     }
@@ -69,7 +78,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             iconColor: Colors.white,
             color: Color(0xFF334D92),
-            onPressed: () {},
+            onPressed: _signInFacebook,
           ),
           SizedBox(
             height: 10,
