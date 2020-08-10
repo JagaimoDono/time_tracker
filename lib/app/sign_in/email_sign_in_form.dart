@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker_flutter/app/sign_in/validators.dart';
 import 'package:time_tracker_flutter/common_widgets/form_submit_button.dart';
 import 'package:time_tracker_flutter/services/auth.dart';
 
 enum EmailSignInFormType { signIn, register }
 
-class EmailSignInForm extends StatefulWidget {
+class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
   EmailSignInForm({@required this.auth});
 
   final AuthBase auth;
@@ -59,7 +60,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         ? 'Need an account? Register'
         : 'Already have an account? Sign in';
 
-    bool _submitEnabled = _email.isNotEmpty && _password.isNotEmpty;
+    bool _submitEnabled = widget.emailValidator.isValid(_email) &&
+        widget.passwordValidator.isValid(_password);
 
     return [
       _buildEmailTextField(),
@@ -85,8 +87,11 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildPasswordTextField() {
+    bool validPassword = widget.passwordValidator.isValid(_password);
     return TextField(
-      decoration: InputDecoration(labelText: 'Password'),
+      decoration: InputDecoration(
+          labelText: 'Password',
+          errorText: validPassword ? null : widget.invalidPasswordErrorText),
       obscureText: true,
       controller: _passwordController,
       textInputAction: TextInputAction.done,
@@ -97,9 +102,12 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildEmailTextField() {
+    bool validEmail = widget.emailValidator.isValid(_email);
     return TextField(
-      decoration:
-          InputDecoration(labelText: 'Email', hintText: 'exemple@exemple.com'),
+      decoration: InputDecoration(
+          labelText: 'Email',
+          hintText: 'exemple@exemple.com',
+          errorText: validEmail ? null : widget.invalidEmailErrorText),
       autocorrect: false,
       autofocus: true,
       controller: _emailController,
