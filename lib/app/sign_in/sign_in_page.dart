@@ -40,7 +40,9 @@ class SignInPage extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        builder: (context) => EmailSignInPpage(),
+        builder: (context) => EmailSignInPage(
+          auth: auth,
+        ),
       ),
     );
   }
