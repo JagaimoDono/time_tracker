@@ -9,14 +9,14 @@ import 'package:time_tracker_flutter/common_widgets/platform_alert_dialog.dart';
 import 'package:time_tracker_flutter/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter/services/auth.dart';
 
-enum EmailSignInFormType { signIn, register }
+import 'email_sign_in_model.dart';
 
-class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
+class EmailSignInFormStateful extends StatefulWidget with EmailAndPasswordValidator {
   @override
-  _EmailSignInFormState createState() => _EmailSignInFormState();
+  _EmailSignInFormStatefulState createState() => _EmailSignInFormStatefulState();
 }
 
-class _EmailSignInFormState extends State<EmailSignInForm> {
+class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
@@ -67,9 +67,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   void _toggleFormType() {
     setState(() {
-      _formType = _formType == EmailSignInFormType.signIn
-          ? EmailSignInFormType.register
-          : EmailSignInFormType.signIn;
+      _formType = _formType == EmailSignInFormType.signIn ? EmailSignInFormType.register : EmailSignInFormType.signIn;
       _submitted = false;
     });
     _emailController.clear();
@@ -77,23 +75,17 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   void _emailEditingComplete() {
-    final newFocus = widget.emailValidator.isValid(_email)
-        ? _passwordFocusNode
-        : _emailFocusNode;
+    final newFocus = widget.emailValidator.isValid(_email) ? _passwordFocusNode : _emailFocusNode;
     FocusScope.of(context).requestFocus(newFocus);
   }
 
   List<Widget> _buildChildren() {
-    final primaryText = _formType == EmailSignInFormType.signIn
-        ? 'Sign in'
-        : 'Create an account';
-    final secondaryText = _formType == EmailSignInFormType.signIn
-        ? 'Need an account? Register'
-        : 'Already have an account? Sign in';
+    final primaryText = _formType == EmailSignInFormType.signIn ? 'Sign in' : 'Create an account';
+    final secondaryText =
+        _formType == EmailSignInFormType.signIn ? 'Need an account? Register' : 'Already have an account? Sign in';
 
-    bool _submitEnabled = widget.emailValidator.isValid(_email) &&
-        widget.passwordValidator.isValid(_password) &&
-        !_isLoading;
+    bool _submitEnabled =
+        widget.emailValidator.isValid(_email) && widget.passwordValidator.isValid(_password) && !_isLoading;
 
     return [
       _buildEmailTextField(),
@@ -119,8 +111,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   TextField _buildPasswordTextField() {
-    bool showErrorText =
-        _submitted && !widget.passwordValidator.isValid(_password);
+    bool showErrorText = _submitted && !widget.passwordValidator.isValid(_password);
     return TextField(
       decoration: InputDecoration(
           labelText: 'Password',
