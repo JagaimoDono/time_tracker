@@ -37,12 +37,12 @@ class EmailSignInBloc {
     updateWith(email: '', password: '', formType: formType, loading: false, submitted: false);
   }
 
+  void updateEmail(String email) => updateWith(email: email);
+  void updatePassword(String password) => updateWith(password: password);
+
   void updateWith({String email, String password, EmailSignInFormType formType, bool loading, bool submitted}) {
     _model =
         _model.copyWith(email: email, password: password, formType: formType, loading: loading, submitted: submitted);
     _modelController.add(_model);
   }
-
-  void updateEmail(String email) => updateWith(email: email);
-  void updatePassword(String password) => updateWith(password: password);
 }
