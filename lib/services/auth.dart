@@ -54,11 +54,10 @@ class Auth implements AuthBase {
     final result = await facebookLogin.logInWithReadPermissions(
       ['public_profile'],
     );
-    print('Result = ${result}');
+    print('Result = $result');
     if (result.accessToken != null) {
       final authResult = await _firebaseAuth.signInWithCredential(
-        FacebookAuthProvider.getCredential(
-            accessToken: result.accessToken.token),
+        FacebookAuthProvider.getCredential(accessToken: result.accessToken.token),
       );
       return _userFromFirebase(authResult.user);
     } else {
@@ -74,14 +73,11 @@ class Auth implements AuthBase {
     final googleSignIn = GoogleSignIn();
     final googleAccount = await googleSignIn.signIn();
     if (googleAccount != null) {
-      GoogleSignInAuthentication googleAuth =
-          await googleAccount.authentication;
+      GoogleSignInAuthentication googleAuth = await googleAccount.authentication;
 
       if (googleAuth.idToken != null && googleAuth.accessToken != null) {
         final authResult = await _firebaseAuth.signInWithCredential(
-            GoogleAuthProvider.getCredential(
-                idToken: googleAuth.idToken,
-                accessToken: googleAuth.accessToken));
+            GoogleAuthProvider.getCredential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken));
 
         return _userFromFirebase(authResult.user);
       } else {
@@ -100,16 +96,13 @@ class Auth implements AuthBase {
 
   @override
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    final authResult = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+    final authResult = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
 
   @override
-  Future<User> registerWithEmailAndPassword(
-      String email, String password) async {
-    final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+  Future<User> registerWithEmailAndPassword(String email, String password) async {
+    final authResult = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
     return _userFromFirebase(authResult.user);
   }
 
