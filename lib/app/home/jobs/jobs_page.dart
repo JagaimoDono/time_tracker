@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:time_tracker_flutter/app/home/jobs/add_job_page.dart';
+import 'package:time_tracker_flutter/app/home/jobs/edit_job_page.dart';
+import 'package:time_tracker_flutter/app/home/jobs/empty_content.dart';
+import 'package:time_tracker_flutter/app/home/jobs/job_list_tile.dart';
+import 'package:time_tracker_flutter/app/home/jobs/list_items_builder.dart';
 import 'package:time_tracker_flutter/app/home/models/job.dart';
 import 'package:time_tracker_flutter/common_widgets/platform_alert_dialog.dart';
 import 'package:time_tracker_flutter/common_widgets/platform_exception_alert_dialog.dart';
@@ -31,6 +34,18 @@ class JobsPage extends StatelessWidget {
     }
   }
 
+  Future<void> _delete(BuildContext context, Job job) async {
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      await database.deleteJob(job);
+    } on PlatformException catch (e) {
+      PlatformExceptionAlertDialog(
+        title: 'Operation Failed',
+        exception: e,
+      ).show(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +63,7 @@ class JobsPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => AddJobPage.show(context),
+        onPressed: () => EditJobPage.show(context),
       ),
       body: _buildContents(context),
     );
@@ -61,8 +76,21 @@ class JobsPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final jobs = snapshot.data;
-          final children = jobs.map((job) => Text(job.name)).toList();
-          return ListView(children: children);
+          return ListItemBuilder<Job>(
+            snapshot: snapshot,
+            itemBuilder: (context, job) => Dismissible(
+              key: Key('job-${job.id}'),
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) => _delete(context, job),
+              background: Container(
+                color: Colors.red,
+              ),
+              child: JobListTile(
+                job: job,
+                onTap: () => EditJobPage.show(context, job: job),
+              ),
+            ),
+          );
         }
         if (snapshot.hasError) {
           return Center(
